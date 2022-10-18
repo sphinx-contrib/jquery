@@ -1,7 +1,7 @@
 import sphinx
 
-__version__ = "1.0.0"
-version_info = (1, 0, 0)
+__version__ = "2.0.0"
+version_info = (2, 0, 0)
 
 
 def setup(app):
@@ -16,5 +16,5 @@ def setup(app):
     return {
         "parallel_read_safe": True,
         "parallel_write_safe": True,
-        "version": "1.0.0",
+        "version": __version__,
     }
