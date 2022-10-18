@@ -4,7 +4,7 @@ __version__ = "1.0.0"
 version_info = (1, 0, 0)
 
 
-def setup(app: "sphinx.application.Sphinx"):
+def setup(app):
     jquery_installed = getattr(app, "_sphinxcontrib_jquery_installed", False)
     if sphinx.version_info[:2] >= (6, 0) and not jquery_installed:
         app.add_js_file(
