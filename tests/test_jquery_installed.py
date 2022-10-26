@@ -1,4 +1,4 @@
-import os.path
+from pathlib import Path
 
 import pytest
 import sphinx
@@ -7,19 +7,12 @@ from sphinx.testing.util import SphinxTestApp
 
 
 def run_blank_app(srcdir, **kwargs):
-    with open(os.path.join(srcdir, "conf.py"), "w", encoding="ascii") as f:
-        f.write("")
-    with open(os.path.join(srcdir, "index.rst"), "w", encoding="ascii") as f:
-        f.write("")
-    app = SphinxTestApp(
-        **kwargs,
-        srcdir=srcdir
-    )
+    Path(srcdir, "conf.py").write_text("", encoding="ascii")
+    Path(srcdir, "index.rst").write_text("", encoding="ascii")
+    app = SphinxTestApp(**kwargs, srcdir=srcdir)
     app.builder.build_all()
     app.cleanup()
-    with open(os.path.join(srcdir, "_build", "html", "index.html"), "r", encoding="utf-8") as f:
-        text = f.read()
-    return text
+    return Path(srcdir, "_build", "html")
 
 
 @pytest.fixture(scope="function")
@@ -34,12 +27,28 @@ def blank_app(tmpdir, monkeypatch):
 @pytest.mark.skipif(sphinx.version_info[:2] < (6, 0),
                     reason="Requires Sphinx 6.0 or greater")
 def test_jquery_installed_sphinx_ge_60(blank_app):
-    text = blank_app(confoverrides={"extensions": ["sphinxcontrib.jquery"]})
-    assert "https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js" in text
+    out_dir = blank_app(confoverrides={"extensions": ["sphinxcontrib.jquery"]})
+
+    text = out_dir.joinpath("index.html").read_text(encoding="utf-8")
+    assert '<script src="_static/jquery.js"></script>' in text
+    assert '<script src="_static/_sphinx_javascript_frameworks_compat.js"></script>' in text
+
+    static_dir = out_dir / '_static'
+    assert static_dir.joinpath('jquery.js').is_file()
+    assert static_dir.joinpath('_sphinx_javascript_frameworks_compat.js').is_file()
 
 
 @pytest.mark.skipif(sphinx.version_info[:2] >= (6, 0),
                     reason="Requires Sphinx older than 6.0")
 def test_jquery_installed_sphinx_lt_60(blank_app):
-    text = blank_app(confoverrides={"extensions": ["sphinxcontrib.jquery"]})
-    assert "https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js" not in text
+    out_dir = blank_app(confoverrides={"extensions": ["sphinxcontrib.jquery"]})
+
+    text = out_dir.joinpath("index.html").read_text(encoding="utf-8")
+    assert '<script src="_static/jquery.js"></script>' in text
+    if sphinx.version_info[:1] == (5,):
+        assert '<script src="_static/_sphinx_javascript_frameworks_compat.js"></script>' in text
+
+    static_dir = out_dir / '_static'
+    assert static_dir.joinpath('jquery.js').is_file()
+    if sphinx.version_info[:1] == (5,):
+        assert static_dir.joinpath('_sphinx_javascript_frameworks_compat.js').is_file()
