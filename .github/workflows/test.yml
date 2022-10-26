@@ -8,7 +8,7 @@ permissions:
 jobs:
   ubuntu:
     runs-on: ubuntu-latest
-    name: Python ${{ matrix.python }}
+    name: Python ${{ matrix.python }}, Sphinx ${{ matrix.sphinx[1] }}
     strategy:
       fail-fast: false
       matrix:
@@ -17,7 +17,16 @@ jobs:
         - "3.8"
         - "3.9"
         - "3.10"
-        - "3.11-dev"
+        - "3.11"
+        # - "3.12-dev"
+        sphinx:
+        - ["sphinx>=4.0.0a0,<5", "~=4"]  # jQuery included
+        - ["sphinx>=5.0.0a0,<6", "~=5"]  # jQuery deprecated
+        - ["sphinx>=6.0.0a0", ">=6"]  # jQuery removed
+        exclude:
+        # Sphinx 6 does not support Python 3.7
+        - python: "3.7"
+          sphinx: ["sphinx>=6.0.0a0", ">=6"]
 
     steps:
     - uses: actions/checkout@v3
@@ -25,12 +34,14 @@ jobs:
       uses: actions/setup-python@v4
       with:
         python-version: ${{ matrix.python }}
+        cache: pip
+        cache-dependency-path: .github/workflows/test.yml
     - name: Check Python version
       run: python --version
     - name: Update pip
       run: python -m pip install -U pip
     - name: Install dependencies
-      run: python -m pip install -U pytest sphinx
+      run: python -m pip install -U pytest "${{ matrix.sphinx[0] }}"
     - name: Install sphinxcontrib-jquery
       run: python -m pip install .
     - name: Run pytest
