@@ -9,6 +9,7 @@ jobs:
   test-under-coverage:
     runs-on: ubuntu-latest
     strategy:
+      name: ${{ matrix.name }}
       fail-fast: false
       matrix:
         include:
