@@ -1,9 +1,13 @@
+import base64
+import hashlib
 from pathlib import Path
 
 import pytest
 import sphinx
 from sphinx.testing.path import path
 from sphinx.testing.util import SphinxTestApp
+
+from sphinxcontrib.jquery import _FILES, _ROOT_DIR  # NoQA
 
 
 def run_blank_app(srcdir, **kwargs):
@@ -30,8 +34,12 @@ def test_jquery_installed_sphinx_ge_60(blank_app):
     out_dir = blank_app(confoverrides={"extensions": ["sphinxcontrib.jquery"]})
 
     text = out_dir.joinpath("index.html").read_text(encoding="utf-8")
-    assert '<script src="_static/jquery.js"></script>' in text
-    assert '<script src="_static/_sphinx_javascript_frameworks_compat.js"></script>' in text
+    assert ('<script '
+            'integrity="sha384-vtXRMe3mGCbOeY7l30aIg8H9p3GdeSe4IFlP6G8JMa7o7lXvnz3GFKzPxzJdPfGK" '
+            'src="_static/jquery.js"></script>') in text
+    assert ('<script '
+            'integrity="sha384-lSZeSIVKp9myfKbDQ3GkN/KHjUc+mzg17VKDN4Y2kUeBSJioB9QSM639vM9fuY//" '
+            'src="_static/_sphinx_javascript_frameworks_compat.js"></script>') in text
 
     static_dir = out_dir / '_static'
     assert static_dir.joinpath('jquery.js').is_file()
@@ -52,3 +60,10 @@ def test_jquery_installed_sphinx_lt_60(blank_app):
     assert static_dir.joinpath('jquery.js').is_file()
     if sphinx.version_info[:1] == (5,):
         assert static_dir.joinpath('_sphinx_javascript_frameworks_compat.js').is_file()
+
+
+@pytest.mark.parametrize(('filename', 'integrity'), _FILES, ids=[*dict(_FILES)])
+def test_integrity(filename, integrity):
+    checksum = hashlib.sha384(Path(_ROOT_DIR, filename).read_bytes())
+    encoded = base64.b64encode(checksum.digest()).decode(encoding='ascii')
+    assert f"sha384-{encoded}" == integrity
