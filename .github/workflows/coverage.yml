@@ -8,8 +8,8 @@ permissions:
 jobs:
   test-under-coverage:
     runs-on: ubuntu-latest
+    name: ${{ matrix.name }}
     strategy:
-      name: ${{ matrix.name }}
       fail-fast: false
       matrix:
         include:
