@@ -40,3 +40,6 @@ dependencies = [
 
 [[project.authors]]
 name = "Adam Turner"
+
+[tool.coverage.run]
+source = ["sphinxcontrib.jquery"]
