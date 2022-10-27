@@ -9,9 +9,10 @@ from sphinx.testing.util import SphinxTestApp
 def run_blank_app(srcdir, **kwargs):
     Path(srcdir, "conf.py").write_text("", encoding="ascii")
     Path(srcdir, "index.rst").write_text("", encoding="ascii")
-    app = SphinxTestApp(**kwargs, srcdir=srcdir)
-    app.builder.build_all()
-    app.cleanup()
+    for _ in range(2):  # build twice to test re-builds
+        app = SphinxTestApp(**kwargs, srcdir=srcdir)
+        app.builder.build_all()
+        app.cleanup()
     return Path(srcdir, "_build", "html")
 
 
