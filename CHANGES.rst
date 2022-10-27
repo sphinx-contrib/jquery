@@ -5,6 +5,9 @@ Release 3.0.0 (in development)
   ``_static`` directory.
 * Include the ``_sphinx_javascript_frameworks_compat.js`` compatibility file
   from Sphinx 5.
+* Include `subresource integrity`_ checksums in generated ``<script/>`` tags.
+
+.. _subresource integrity: https://developer.mozilla.org/en-US/docs/Web/Security/Subresource_Integrity
 
 Release 2.0.0 (18/10/2022)
 ==========================
