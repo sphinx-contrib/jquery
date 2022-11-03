@@ -1,5 +1,5 @@
-Release 3.0.0 (in development)
-==============================
+Release 3.0.0 (03/11/2022)
+==========================
 
 * Vendor jQuery within the extension and copy the files to the documentation's
   ``_static`` directory.

@@ -3,8 +3,8 @@ import shutil
 
 import sphinx
 
-__version__ = "2.0.0"
-version_info = (2, 0, 0)
+__version__ = "3.0.0"
+version_info = (3, 0, 0)
 
 _ROOT_DIR = path.abspath(path.dirname(__file__))
 _FILES = (
