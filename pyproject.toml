@@ -5,7 +5,6 @@ build-backend = "flit_core.buildapi"
 # project metadata
 [project]
 name = "sphinxcontrib.jquery"
-version = "2.0.0"
 description = "Extension to include jQuery on newer Sphinx releases"
 readme = "README.rst"
 license.text = "BSD Zero Clause License"
@@ -37,6 +36,7 @@ classifiers = [
 dependencies = [
     "setuptools",  # for pkg_resources
 ]
+dynamic = ["version"]
 
 [[project.authors]]
 name = "Adam Turner"
