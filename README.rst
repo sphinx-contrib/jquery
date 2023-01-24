@@ -19,3 +19,12 @@ To use it, add ``sphinxcontrib.jquery`` as a Sphinx extension:
        "sphinxcontrib.jquery",
    ]
    ...
+
+Configuration
+-------------
+
+```
+# Enable CORS integrity="<hash>" on included JS files
+# Default: False
+jquery_cors_enable = True
+```

@@ -32,7 +32,7 @@ def blank_app(tmpdir, monkeypatch):
 @pytest.mark.skipif(sphinx.version_info[:2] < (6, 0),
                     reason="Requires Sphinx 6.0 or greater")
 def test_jquery_installed_sphinx_ge_60(blank_app):
-    out_dir = blank_app(confoverrides={"extensions": ["sphinxcontrib.jquery"]})
+    out_dir = blank_app(confoverrides={"extensions": ["sphinxcontrib.jquery"], "jquery_cors_enable": True})
 
     text = out_dir.joinpath("index.html").read_text(encoding="utf-8")
     assert ('<script '
@@ -40,6 +40,22 @@ def test_jquery_installed_sphinx_ge_60(blank_app):
             'src="_static/jquery.js"></script>') in text
     assert ('<script '
             'integrity="sha384-lSZeSIVKp9myfKbDQ3GkN/KHjUc+mzg17VKDN4Y2kUeBSJioB9QSM639vM9fuY//" '
+            'src="_static/_sphinx_javascript_frameworks_compat.js"></script>') in text
+
+    static_dir = out_dir / '_static'
+    assert static_dir.joinpath('jquery.js').is_file()
+    assert static_dir.joinpath('_sphinx_javascript_frameworks_compat.js').is_file()
+
+
+@pytest.mark.skipif(sphinx.version_info[:2] < (6, 0),
+                    reason="Requires Sphinx 6.0 or greater")
+def test_jquery_installed_sphinx_ge_60(blank_app):
+    out_dir = blank_app(confoverrides={"extensions": ["sphinxcontrib.jquery"]})
+
+    text = out_dir.joinpath("index.html").read_text(encoding="utf-8")
+    assert ('<script '
+            'src="_static/jquery.js"></script>') in text
+    assert ('<script '
             'src="_static/_sphinx_javascript_frameworks_compat.js"></script>') in text
 
     static_dir = out_dir / '_static'
