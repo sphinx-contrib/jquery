@@ -24,7 +24,10 @@ Configuration
 -------------
 
 ```
-# Enable CORS integrity="<hash>" on included JS files
+# Enable Subresource Integrity (SRI) such that
+# <script ... integrity="<hash>"> are included on JS files
+# See more: https://developer.mozilla.org/en-US/docs/Web/Security/Subresource_Integrity
 # Default: False
-jquery_cors_enable = True
+
+jquery_sri_enable = True
 ```
