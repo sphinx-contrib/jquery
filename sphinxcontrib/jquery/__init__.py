@@ -28,7 +28,7 @@ def add_js_files(app, config):
             # The default is not not enable SRI because it does not trigger the hash
             # check but instead blocks the request when viewing documentation locally
             # through the file:// "protocol".
-            if config.jquery_sri_enable:
+            if config.jquery_use_sri:
                 app.add_js_file(filename, integrity=integrity, priority=100)
             else:
                 app.add_js_file(filename, priority=100)
@@ -41,7 +41,7 @@ def add_js_files(app, config):
 
 def setup(app):
     # Configuration value for enabling SRI checks
-    app.add_config_value("jquery_sri_enable", default=False, rebuild="html", types=[bool])
+    app.add_config_value("jquery_use_sri", default=False, rebuild="html", types=[bool])
 
     app.connect('config-inited', add_js_files)
 

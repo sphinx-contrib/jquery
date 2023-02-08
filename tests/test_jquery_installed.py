@@ -32,7 +32,7 @@ def blank_app(tmpdir, monkeypatch):
 @pytest.mark.skipif(sphinx.version_info[:2] < (6, 0),
                     reason="Requires Sphinx 6.0 or greater")
 def test_jquery_installed_sphinx_ge_60(blank_app):
-    out_dir = blank_app(confoverrides={"extensions": ["sphinxcontrib.jquery"], "jquery_sri_enable": True})
+    out_dir = blank_app(confoverrides={"extensions": ["sphinxcontrib.jquery"], "jquery_use_sri": True})
 
     text = out_dir.joinpath("index.html").read_text(encoding="utf-8")
     assert ('<script '
