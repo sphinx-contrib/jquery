@@ -1,3 +1,14 @@
+Release 4.0.0 (24/01/2023)
+==========================
+
+* Enforcing `subresource integrity`_ (SRI) checks breaks loading rendered
+  documentation from local filesystem (``file:///`` URIs).
+  SRI checks may now be configured by the boolean configuration option
+  ``jquery_use_sri``, which defaults to ``False``.
+  See `sphinx_rtd_theme#1420`_ for further details.
+
+.. _sphinx_rtd_theme#1420: https://github.com/readthedocs/sphinx_rtd_theme/issues/1420
+
 Release 3.0.0 (03/11/2022)
 ==========================
 
