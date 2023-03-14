@@ -33,9 +33,6 @@ classifiers = [
     "Topic :: Documentation",
     "Topic :: Documentation :: Sphinx",
 ]
-dependencies = [
-    "setuptools",  # for pkg_resources
-]
 dynamic = ["version"]
 
 [[project.authors]]
