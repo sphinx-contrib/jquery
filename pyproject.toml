@@ -45,5 +45,13 @@ name = "Adam Turner"
 [tool.flit.module]
 name = "sphinxcontrib.jquery"
 
+[tool.flit.sdist]
+include = [
+    "AUTHORS",
+    "CHANGES.rst",
+    "LICENCE",
+    "tests/",
+]
+
 [tool.coverage.run]
 source = ["sphinxcontrib.jquery"]

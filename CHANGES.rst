@@ -1,3 +1,9 @@
+Release 4.1 (14/03/2023)
+==========================
+
+* Include ``tests/``, ``AUTHORS``, ``CHANGES.rst``, and ``LICENCE`` in the
+  source distribution ('sdist') file. No changes to functionality.
+
 Release 4.0 (14/03/2023)
 ==========================
 
