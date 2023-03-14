@@ -8,6 +8,7 @@ name = "sphinxcontrib.jquery"
 description = "Extension to include jQuery on newer Sphinx releases"
 readme = "README.rst"
 license.text = "BSD Zero Clause License"
+repository = "https://github.com/sphinx-contrib/jquery/"
 requires-python = ">=2.7"
 
 # Classifiers list: https://pypi.org/classifiers/
