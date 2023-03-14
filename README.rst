@@ -24,12 +24,22 @@ To use it, add ``sphinxcontrib.jquery`` as a Sphinx extension:
 Configuration
 -------------
 
-.. code:: python
+.. As this is a README, we restrict the directives we use to those which GitHub
+   renders correctly. This means that we cannot use ``versionadded``,
+   ``confval``, ``warning``, or other similar directives.
+   We use a reStructuredText definition list to emulate the ``confval``
+   rendering.
+   We use inline **bold** syntax as a poor-man's ``.. warning::`` directive.
 
-    # Enable Subresource Integrity (SRI) such that
-    # <script ... integrity="<hash>"> are included on JS files
-    # See more: https://developer.mozilla.org/en-US/docs/Web/Security/Subresource_Integrity
-    # Default: False
+``jquery_use_sri``
+   A boolean value controlling whether to enable  `subresource integrity`_ (SRI)
+   checks for JavaScript files that this extension loads.
 
-    jquery_sri_enable = True
+   The default is ``False``.
 
+   **Warning**: Enabling SRI checks may break documentation when loaded from
+   local filesystem (``file:///`` URIs).
+
+   *New in version 4.0.*
+
+   .. _subresource integrity: https://developer.mozilla.org/en-US/docs/Web/Security/Subresource_Integrity

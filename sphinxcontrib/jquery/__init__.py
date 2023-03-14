@@ -25,11 +25,11 @@ def add_js_files(app, config):
     if sphinx.version_info[:2] >= (6, 0) and not jquery_installed:
         makedirs(path.join(app.outdir, '_static'), exist_ok=True)
         for (filename, integrity) in _FILES:
-            # The default is not not enable SRI because it does not trigger the hash
-            # check but instead blocks the request when viewing documentation locally
-            # through the file:// "protocol".
+            # The default is not to enable subresource integrity checks, as it
+            # does not trigger the hash check but instead blocks the request
+            # when viewing documentation locally through the ``file://`` URIs.
             if config.jquery_use_sri:
-                app.add_js_file(filename, integrity=integrity, priority=100)
+                app.add_js_file(filename, priority=100, integrity=integrity)
             else:
                 app.add_js_file(filename, priority=100)
             shutil.copyfile(
@@ -40,8 +40,9 @@ def add_js_files(app, config):
 
 
 def setup(app):
-    # Configuration value for enabling SRI checks
-    app.add_config_value("jquery_use_sri", default=False, rebuild="html", types=[bool])
+    # Configuration value for enabling `subresource integrity`__ (SRI) checks
+    # __ https://developer.mozilla.org/en-US/docs/Web/Security/Subresource_Integrity
+    app.add_config_value("jquery_use_sri", default=False, rebuild="html", types=(bool,))
 
     app.connect('config-inited', add_js_files)
 
