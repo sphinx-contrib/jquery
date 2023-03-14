@@ -5,10 +5,17 @@ on: [push, pull_request, workflow_dispatch]
 permissions:
   contents: read
 
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  FORCE_COLOR: "1"
+
 jobs:
   ubuntu:
     runs-on: ubuntu-latest
-    name: Python ${{ matrix.python }}, Sphinx ${{ matrix.sphinx[1] }}
+    name: Python ${{ matrix.python }}, Sphinx ${{ matrix.sphinx }}
     strategy:
       fail-fast: false
       matrix:
@@ -20,13 +27,13 @@ jobs:
         - "3.11"
         # - "3.12-dev"
         sphinx:
-        - ["sphinx>=4.0.0a0,<5", "~=4"]  # jQuery included
-        - ["sphinx>=5.0.0a0,<6", "~=5"]  # jQuery deprecated
-        - ["sphinx>=6.0.0a0", ">=6"]  # jQuery removed
+        - "4"  # jQuery included
+        - "5"  # jQuery deprecated
+        - "6"  # jQuery removed
         exclude:
         # Sphinx 6 does not support Python 3.7
         - python: "3.7"
-          sphinx: ["sphinx>=6.0.0a0", ">=6"]
+          sphinx: "6"
 
     steps:
     - uses: actions/checkout@v3
@@ -41,7 +48,40 @@ jobs:
     - name: Update pip
       run: python -m pip install -U pip
     - name: Install dependencies
-      run: python -m pip install -U pytest "${{ matrix.sphinx[0] }}"
+      run: python -m pip install -U pytest "Sphinx~=${{ matrix.sphinx }}.0"
+    - name: Install sphinxcontrib-jquery
+      run: python -m pip install .
+    - name: Run pytest
+      run: python -X dev -X warn_default_encoding -m pytest -vv
+
+  old-sphinx-versions:
+    runs-on: ubuntu-latest
+    name: Python ${{ matrix.python }}, Sphinx ${{ matrix.sphinx }}
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+        - python: "3.9"
+          sphinx: "3"
+        - python: "3.7"
+          sphinx: "2"
+        - python: "3.7"
+          sphinx: "1.8"
+
+    steps:
+    - uses: actions/checkout@v3
+    - name: Set up Python ${{ matrix.python }}
+      uses: actions/setup-python@v4
+      with:
+        python-version: ${{ matrix.python }}
+        cache: pip
+        cache-dependency-path: .github/workflows/test.yml
+    - name: Check Python version
+      run: python --version
+    - name: Update pip
+      run: python -m pip install -U pip
+    - name: Install dependencies
+      run: python -m pip install -U pytest "Sphinx~=${{ matrix.sphinx }}.0" "Jinja2<3.1"
     - name: Install sphinxcontrib-jquery
       run: python -m pip install .
     - name: Run pytest

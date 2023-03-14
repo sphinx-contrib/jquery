@@ -12,7 +12,10 @@ from sphinxcontrib.jquery import _FILES, _ROOT_DIR  # NoQA
 
 def run_blank_app(srcdir, **kwargs):
     Path(srcdir, "conf.py").write_text("", encoding="ascii")
-    Path(srcdir, "index.rst").write_text("", encoding="ascii")
+    if sphinx.version_info[:2] >= (2, 0):
+        Path(srcdir, "index.rst").touch()
+    else:
+        Path(srcdir, "contents.rst").touch()
     for _ in range(2):  # build twice to test re-builds
         app = SphinxTestApp(**kwargs, srcdir=srcdir)
         app.builder.build_all()
@@ -68,8 +71,12 @@ def test_jquery_installed_sphinx_ge_60(blank_app):
 def test_jquery_installed_sphinx_lt_60(blank_app):
     out_dir = blank_app(confoverrides={"extensions": ["sphinxcontrib.jquery"]})
 
-    text = out_dir.joinpath("index.html").read_text(encoding="utf-8")
-    assert '<script src="_static/jquery.js"></script>' in text
+    if sphinx.version_info[:2] >= (2, 0):
+        text = out_dir.joinpath("index.html").read_text(encoding="utf-8")
+        assert '<script src="_static/jquery.js"></script>' in text
+    else:
+        text = out_dir.joinpath("contents.html").read_text(encoding="utf-8")
+        assert '<script type="text/javascript" src="_static/jquery.js"></script>' in text
     if sphinx.version_info[:1] == (5,):
         assert '<script src="_static/_sphinx_javascript_frameworks_compat.js"></script>' in text
 
