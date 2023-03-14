@@ -1,4 +1,4 @@
-Release 4.0.0 (24/01/2023)
+Release 4.0 (14/03/2023)
 ==========================
 
 * Enforcing `subresource integrity`_ (SRI) checks breaks loading rendered
