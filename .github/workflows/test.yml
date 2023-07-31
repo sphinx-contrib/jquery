@@ -30,10 +30,13 @@ jobs:
         - "4"  # jQuery included
         - "5"  # jQuery deprecated
         - "6"  # jQuery removed
+        - "7"
         exclude:
-        # Sphinx 6 does not support Python 3.7
+        # Sphinx >= 6 does not support Python 3.7
         - python: "3.7"
           sphinx: "6"
+        - python: "3.7"
+          sphinx: "7"
 
     steps:
     - uses: actions/checkout@v3

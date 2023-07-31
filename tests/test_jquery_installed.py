@@ -38,12 +38,14 @@ def test_jquery_installed_sphinx_ge_60_use_sri(blank_app):
     out_dir = blank_app(confoverrides={"extensions": ["sphinxcontrib.jquery"], "jquery_use_sri": True})
 
     text = out_dir.joinpath("index.html").read_text(encoding="utf-8")
+    checksum = '?v=5d32c60e' if sphinx.version_info[:2] >= (7, 1) else ''
     assert ('<script '
             'integrity="sha384-vtXRMe3mGCbOeY7l30aIg8H9p3GdeSe4IFlP6G8JMa7o7lXvnz3GFKzPxzJdPfGK" '
-            'src="_static/jquery.js"></script>') in text
+            f'src="_static/jquery.js{checksum}"></script>') in text
+    checksum = '?v=2cd50e6c' if sphinx.version_info[:2] >= (7, 1) else ''
     assert ('<script '
             'integrity="sha384-lSZeSIVKp9myfKbDQ3GkN/KHjUc+mzg17VKDN4Y2kUeBSJioB9QSM639vM9fuY//" '
-            'src="_static/_sphinx_javascript_frameworks_compat.js"></script>') in text
+            f'src="_static/_sphinx_javascript_frameworks_compat.js{checksum}"></script>') in text
 
     static_dir = out_dir / '_static'
     assert static_dir.joinpath('jquery.js').is_file()
@@ -56,10 +58,12 @@ def test_jquery_installed_sphinx_ge_60(blank_app):
     out_dir = blank_app(confoverrides={"extensions": ["sphinxcontrib.jquery"]})
 
     text = out_dir.joinpath("index.html").read_text(encoding="utf-8")
+    checksum = '?v=5d32c60e' if sphinx.version_info[:2] >= (7, 1) else ''
     assert ('<script '
-            'src="_static/jquery.js"></script>') in text
+            f'src="_static/jquery.js{checksum}"></script>') in text
+    checksum = '?v=2cd50e6c' if sphinx.version_info[:2] >= (7, 1) else ''
     assert ('<script '
-            'src="_static/_sphinx_javascript_frameworks_compat.js"></script>') in text
+            f'src="_static/_sphinx_javascript_frameworks_compat.js{checksum}"></script>') in text
 
     static_dir = out_dir / '_static'
     assert static_dir.joinpath('jquery.js').is_file()
