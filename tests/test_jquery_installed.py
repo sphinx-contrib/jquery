@@ -1,10 +1,9 @@
 import base64
 import hashlib
-from pathlib import Path
+from pathlib import Path, PosixPath
 
 import pytest
 import sphinx
-from sphinx.testing.path import path
 from sphinx.testing.util import SphinxTestApp
 
 from sphinxcontrib.jquery import _FILES, _ROOT_DIR  # NoQA
@@ -23,12 +22,22 @@ def run_blank_app(srcdir, **kwargs):
     return Path(srcdir, "_build", "html")
 
 
+class FakePath(PosixPath):
+    @classmethod
+    def _from_parts(cls, args, **kwargs):
+        cls._path = args[0]
+        return PosixPath._from_parts(args, **kwargs)
+
+    def resolve(self, *args, **kwargs):
+        return self._path
+
+
 @pytest.fixture(scope="function")
 def blank_app(tmpdir, monkeypatch):
     def inner(**kwargs):
-        return run_blank_app(path(tmpdir), **kwargs)
+        return run_blank_app(Path(tmpdir), **kwargs)
 
-    monkeypatch.setattr("sphinx.application.abspath", lambda x: x)
+    monkeypatch.setattr("sphinx.application._StrPath", FakePath)
     yield inner
 
 
