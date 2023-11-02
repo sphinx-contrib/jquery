@@ -4,10 +4,14 @@ from pathlib import Path
 
 import pytest
 import sphinx
-from sphinx.testing.path import path
 from sphinx.testing.util import SphinxTestApp
 
 from sphinxcontrib.jquery import _FILES, _ROOT_DIR  # NoQA
+
+if sphinx.version_info >= (7, 2):
+    test_path = Path
+else:
+    from sphinx.testing.path import path as test_path
 
 
 def run_blank_app(srcdir, **kwargs):
@@ -26,9 +30,11 @@ def run_blank_app(srcdir, **kwargs):
 @pytest.fixture(scope="function")
 def blank_app(tmpdir, monkeypatch):
     def inner(**kwargs):
-        return run_blank_app(path(tmpdir), **kwargs)
+        return run_blank_app(test_path(tmpdir), **kwargs)
 
-    monkeypatch.setattr("sphinx.application.abspath", lambda x: x)
+    # Sphinx 7.2.x doesn't have abspath
+    if hasattr(sphinx.application, "abspath"):
+        monkeypatch.setattr("sphinx.application.abspath", lambda x: x)
     yield inner
 
 
